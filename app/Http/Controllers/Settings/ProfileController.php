@@ -33,6 +33,14 @@ class ProfileController extends Controller
                 'max:255',
                 Rule::unique(User::class)->ignore($user->id),
             ],
+            'phone' => ['nullable', 'string', 'max:255'],
+            'company' => ['nullable', 'string', 'max:255'],
+            'job_title' => ['nullable', 'string', 'max:255'],
+            'country' => ['nullable', 'string', 'max:255'],
+            'city' => ['nullable', 'string', 'max:255'],
+            'socials' => ['nullable', 'array'],
+            'socials.*.title' => ['nullable', 'string', 'max:255'],
+            'socials.*.url' => ['nullable', 'url', 'max:255'],
         ]);
 
         $user->fill($validated);
