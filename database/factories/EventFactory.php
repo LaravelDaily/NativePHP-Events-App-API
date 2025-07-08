@@ -18,8 +18,8 @@ class EventFactory extends Factory
      */
     public function definition(): array
     {
-        $startDateTime = $this->faker->dateTimeBetween('now', '+2 months');
-        $endDateTime = $this->faker->dateTimeBetween($startDateTime, '+3 months');
+        $startDateTime = $this->faker->dateTimeBetween('-1 month', '+1 month');
+        $endDateTime = $this->faker->dateTimeBetween($startDateTime, $startDateTime->modify('+1 day'));
 
         return [
             'user_id' => User::factory(),

@@ -23,12 +23,19 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // Create some sample events
-        $events = Event::factory(5)
+        $events = Event::factory(20)
             ->has(Talk::factory(3)->thisWeek())
             ->create();
 
+        Event::factory(20)
+            ->has(Talk::factory(3)->past())
+            ->create([
+                'start_datetime' => now()->subDays(30),
+                'end_datetime' => now()->subDays(1),
+            ]);
+
         // Attach some events and talks to the test user
-        $events->take(3)->each(function ($event) use ($user) {
+        $events->take(5)->each(function ($event) use ($user) {
             $user->events()->attach($event->id, ['is_attending' => true]);
         });
     }

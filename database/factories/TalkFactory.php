@@ -54,6 +54,17 @@ class TalkFactory extends Factory
     }
 
     /**
+     * Indicate that the talk is happening in the past.
+     */
+    public function past(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'start_time' => now()->subDays(rand(1, 30)),
+            'end_time' => now()->subDays(rand(1, 30)),
+        ]);
+    }
+
+    /**
      * Indicate that the talk is a short session (30 minutes).
      */
     public function short(): static
