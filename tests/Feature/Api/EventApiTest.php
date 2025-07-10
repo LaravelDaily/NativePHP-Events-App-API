@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Event;
-use App\Models\Talk;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
@@ -43,8 +42,14 @@ test('user can filter attending events', function () {
     $user = User::factory()->create();
     Sanctum::actingAs($user);
 
-    $attendingEvent = Event::factory()->create();
-    $nonAttendingEvent = Event::factory()->create();
+    $attendingEvent = Event::factory()->create([
+        'start_datetime' => now()->addDays(5),
+        'end_datetime' => now()->addDays(5)->addHours(2)
+    ]);
+    $nonAttendingEvent = Event::factory()->create([
+        'start_datetime' => now()->addDays(6),
+        'end_datetime' => now()->addDays(6)->addHours(2)
+    ]);
 
     // User attends one event
     $user->events()->attach($attendingEvent->id, ['is_attending' => true]);

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\TalkResource;
 use App\Models\Talk;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -56,15 +55,5 @@ class TalkController extends Controller
             'message' => 'Successfully unregistered from the talk.',
             'is_attending' => false
         ], 200);
-    }
-
-    /**
-     * Show the specified talk.
-     */
-    public function show(Request $request, Talk $talk): JsonResponse
-    {
-        $talk->load(['event']);
-
-        return (new TalkResource($talk))->response();
     }
 }

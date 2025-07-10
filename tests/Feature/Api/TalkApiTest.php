@@ -8,32 +8,6 @@ use Laravel\Sanctum\Sanctum;
 
 uses(RefreshDatabase::class);
 
-test('user can get single talk', function () {
-    $user = User::factory()->create();
-    $event = Event::factory()->create();
-    $talk = Talk::factory()->for($event)->create();
-    Sanctum::actingAs($user);
-
-    $response = $this->getJson("/api/talks/{$talk->id}");
-
-    $response->assertStatus(200)
-        ->assertJsonStructure([
-            'data' => [
-                'id',
-                'title',
-                'description',
-                'speaker_name',
-                'start_time',
-                'end_time',
-                'event',
-                'attendees_count',
-                'is_attending',
-                'created_at',
-                'updated_at'
-            ]
-        ]);
-});
-
 test('user can attend talk', function () {
     $user = User::factory()->create();
     $event = Event::factory()->create();
@@ -103,53 +77,4 @@ test('user cannot unattend talk not attending', function () {
             'message' => 'You are not attending this talk.',
             'is_attending' => false
         ]);
-});
-
-test('unauthenticated user cannot access talks', function () {
-    $event = Event::factory()->create();
-    $talk = Talk::factory()->for($event)->create();
-
-    $response = $this->getJson("/api/talks/{$talk->id}");
-
-    $response->assertStatus(401);
-});
-
-test('talk response includes event information', function () {
-    $user = User::factory()->create();
-    $event = Event::factory()->create();
-    $talk = Talk::factory()->for($event)->create();
-    Sanctum::actingAs($user);
-
-    $response = $this->getJson("/api/talks/{$talk->id}");
-
-    $response->assertStatus(200)
-        ->assertJson([
-            'data' => [
-                'event' => [
-                    'id' => $event->id,
-                    'title' => $event->title
-                ]
-            ]
-        ]);
-});
-
-test('talk attendance status is correct', function () {
-    $user = User::factory()->create();
-    $event = Event::factory()->create();
-    $talk = Talk::factory()->for($event)->create();
-    Sanctum::actingAs($user);
-
-    // Initially not attending
-    $response = $this->getJson("/api/talks/{$talk->id}");
-    $response->assertJson(['data' => ['is_attending' => false]]);
-
-    // After attending
-    $this->postJson("/api/talks/{$talk->id}/attend");
-    $response = $this->getJson("/api/talks/{$talk->id}");
-    $response->assertJson(['data' => ['is_attending' => true]]);
-
-    // After unattending
-    $this->deleteJson("/api/talks/{$talk->id}/attend");
-    $response = $this->getJson("/api/talks/{$talk->id}");
-    $response->assertJson(['data' => ['is_attending' => false]]);
 });

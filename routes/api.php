@@ -25,7 +25,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/events/{event}/attend', [EventController::class, 'unattend']);
 
     // Talks
-    Route::get('/talks/{talk}', [TalkController::class, 'show']);
     Route::post('/talks/{talk}/attend', [TalkController::class, 'attend']);
     Route::delete('/talks/{talk}/attend', [TalkController::class, 'unattend']);
 });
